@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:random_products_flutter_app/Screens/Home/home.actions.dart';
 import 'package:random_products_flutter_app/Widgets/organisms/index.dart';
 import 'package:random_products_flutter_app/Widgets/organisms/render_future_builder.dart';
 import 'package:random_products_flutter_app/app_colors.dart';
+import 'package:random_products_flutter_app/app_routes.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -25,6 +27,10 @@ class _HomeState extends State<Home> {
         title: "Random Products",
       ),
       backgroundColor: AppColors.greyWhiteColor,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => GoRouter.of(context).push(AppRoutes.kSearch),
+        child: const Icon(Icons.search),
+      ),
       body: renderFuturebuilder(
         future: getProducts(),
         builder: (context, snapshot) {
