@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/widgets.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:flutter/material.dart';
 import 'package:random_products_flutter_app/Screens/Search/search.actions.dart';
@@ -36,6 +38,7 @@ Widget _buildSearchField(
     child: TextField(
       focusNode: focusNode,
       onChanged: onChanged,
+      dragStartBehavior: DragStartBehavior.start,
       decoration: InputDecoration(
         hintText: 'Search',
         filled: true,
@@ -68,7 +71,10 @@ class _SearchState extends State<Search> {
     _debounce = Timer(const Duration(milliseconds: 500), () async {
       final results = await searchProducts(query: query);
       setState(() {
-        products.add(results["data"]);
+        print("//////////////");
+        print(results["data"]);
+        print("//////////////");
+        products = results["data"];
       });
     });
   }
@@ -90,27 +96,24 @@ class _SearchState extends State<Search> {
                 ),
               ),
             ),
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                child: Text("Search Results"),
+            SliverGrid(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 400.0,
+                childAspectRatio: 1.0,
               ),
-            ),
-            SliverList(
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int index) {
-                  print("producsts::::::::::::::::::");
-                  print(products);
                   final product = products[index];
-                  return const ProductCard(
-                    id: "asdads",
-                    name: "Title ",
-                    price: 123,
-                    imageUrl: "",
+                  return ProductCard(
+                    id: product["id"].toString(),
+                    name: product["title"],
+                    price: product["price"],
+                    imageUrl: product["thumbnail"],
                   );
                 },
                 childCount: products.length,
               ),
-            ),
+            )
           ],
         ),
       ),
